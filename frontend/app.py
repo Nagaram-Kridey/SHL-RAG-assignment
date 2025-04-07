@@ -1,22 +1,23 @@
 import streamlit as st
 import requests
-import subprocess
+
+FASTAPI_URL = "https://shl-rag-assignment.onrender.com/"  # your deployed backend
 
 st.title("SHL Assessment Recommender")
 
-if st.button("🔄 Run Web Scraper (dataloader.py)"):
-    with st.spinner("Scraping data from SHL..."):
-        result = subprocess.run(["python", "app/dataloader.py"], capture_output=True, text=True)
-        if result.returncode == 0:
-            st.success("✅ Data loaded successfully!")
-        else:
-            st.error("❌ Scraping failed!")
-            st.text(result.stderr)
+query = st.text_input("Enter job role or keywords:")
 
-query = st.text_area("Enter job description or requirement:")
-if st.button("Get Recommendations"):
-    res = requests.post("http://localhost:8000/recommend", json={"query": query})
-    for r in res.json()["results"]:
-        st.markdown(f"**[{r['name']}]({r['url']})** - {r['type']}")
-        st.write(f"🕒 {r['duration']} | Remote: {r['remote_support']} | Adaptive: {r['adaptive']}")
-        st.markdown("---")
+if st.button("Search") and query:
+    with st.spinner("Fetching recommendations..."):
+        response = requests.post(f"{FASTAPI_URL}/recommend", json={"query": query})
+
+        if response.status_code == 200:
+            results = response.json()
+            st.success("Results loaded!")
+
+            for result in results:
+                st.write(f"**{result['title']}**")
+                st.write(result.get("description", "No description available."))
+                st.markdown("---")
+        else:
+            st.error("Something went wrong fetching data.")
