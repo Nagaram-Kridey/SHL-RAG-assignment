@@ -26,6 +26,7 @@ if st.button("Search") and query:
         if response.status_code == 200:
             results = response.json()
             st.success("Results loaded!")
+            st.json(results)
 
             for result in results:
                 st.write(f"**{result['title']}**")
