@@ -5,6 +5,18 @@ FASTAPI_URL = "https://shl-rag-assignment.onrender.com/"  # your deployed backen
 
 st.title("SHL Assessment Recommender")
 
+if st.button("🔄 Update Assessment Data"):
+    with st.spinner("Updating data..."):
+        try:
+            response = requests.post(f"{API_URL}/update-data")
+            if response.status_code == 200:
+                st.success("✅ Data updated successfully!")
+            else:
+                st.error(f"❌ Failed to update: {response.status_code}")
+        except Exception as e:
+            st.error(f"❌ Error: {str(e)}")
+
+
 query = st.text_input("Enter job role or keywords:")
 
 if st.button("Search") and query:
