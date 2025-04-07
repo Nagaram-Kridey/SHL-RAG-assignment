@@ -1,7 +1,7 @@
 import os
 import cohere
 
-co = cohere.Client(os.getenv("COHERE_API_KEY"))
+co = cohere.Client(os.getenv("CO_API_KEY"))
 
 def get_embedding(text):
     response = co.embed(
