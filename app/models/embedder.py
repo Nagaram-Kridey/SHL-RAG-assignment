@@ -1,10 +1,7 @@
 import os
 import cohere
-from dotenv import load_dotenv  # 👈 Add this line
 
-load_dotenv()
-
-co = cohere.Client(os.getenv("COHERE_API_KEY"))
+co = cohere.Client(os.getenv("NLsFioGYpUzTRlM38EycW5QQEPIOBykiem2F8jc3"))
 
 def get_embedding(text):
     response = co.embed(
