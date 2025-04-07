@@ -29,7 +29,7 @@ if st.button("Search") and query:
             st.json(results)
 
             for result in results:
-                st.write(f"**{result['title']}**")
+                st.write(f"**{result.get('name', 'Untitled')}**")
                 st.write(result.get("description", "No description available."))
                 st.markdown("---")
         else:
