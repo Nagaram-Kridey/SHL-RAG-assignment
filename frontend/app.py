@@ -8,7 +8,7 @@ st.title("SHL Assessment Recommender")
 if st.button("🔄 Update Assessment Data"):
     with st.spinner("Updating data..."):
         try:
-            response = requests.post(f"{API_URL}/update-data")
+            response = requests.post(f"{FASTAPI_URL}/update-data")
             if response.status_code == 200:
                 st.success("✅ Data updated successfully!")
             else:
