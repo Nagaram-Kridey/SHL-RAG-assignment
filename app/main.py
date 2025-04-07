@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import json
 from pathlib import Path
 from app.recommender import recommend_query
+from app.dataloader_2 import load_data_and_update_index
 
 app = FastAPI()
 DATA_PATH = Path("data/shl_assessments.json")
