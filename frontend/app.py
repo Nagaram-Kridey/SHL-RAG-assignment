@@ -1,11 +1,11 @@
 import streamlit as st
 import requests
 
-# Add custom CSS for better UI
+# Add custom CSS for improved UI with contrasting colors and color psychology
 st.markdown("""
     <style>
         body {
-            background-color: #f4f7fc;
+            background-color: #f9f9f9;
             color: #333;
             font-family: 'Arial', sans-serif;
         }
@@ -13,21 +13,29 @@ st.markdown("""
         .title {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #1f77b4;
+            color: #2C3E50;  /* Deep Blue for professionalism and trust */
             text-align: center;
         }
 
         .button {
-            background-color: #1f77b4;
+            background-color: #3498db;  /* Blue for trust and professionalism */
             color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 1rem;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1.1rem;
             transition: background-color 0.3s ease;
         }
 
         .button:hover {
-            background-color: #0a5c8e;
+            background-color: #2980b9;  /* Slightly darker blue for hover effect */
+        }
+
+        .button-update {
+            background-color: #2ecc71;  /* Green for success */
+        }
+
+        .button-update:hover {
+            background-color: #27ae60;  /* Darker green for hover effect */
         }
 
         .card {
@@ -35,8 +43,9 @@ st.markdown("""
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
-            padding: 15px;
+            padding: 20px;
             transition: transform 0.3s ease-in-out;
+            border-left: 5px solid #3498db;  /* Blue accent */
         }
 
         .card:hover {
@@ -44,9 +53,9 @@ st.markdown("""
         }
 
         .card-header {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            color: #1f77b4;
+            color: #2980b9;  /* Deep Blue for titles */
         }
 
         .card-body {
@@ -61,30 +70,44 @@ st.markdown("""
 
         .spinner {
             font-size: 1.5rem;
-            color: #1f77b4;
+            color: #3498db;  /* Blue spinner for consistency */
+        }
+
+        .warning-text {
+            color: #e74c3c;  /* Red for warning or errors */
+            font-weight: bold;
+        }
+
+        .success-text {
+            color: #2ecc71;  /* Green for success messages */
+        }
+
+        .highlight {
+            color: #f39c12;  /* Orange for important highlights */
+            font-weight: bold;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Add a title with more prominent styling
+# Add a title with color psychology in mind
 st.markdown('<div class="title">SHL Assessment Recommender</div>', unsafe_allow_html=True)
 
 FASTAPI_URL = "https://shl-rag-assignment.onrender.com/"  # your deployed backend
 
-if st.button("🔄 Update Assessment Data", key="update", help="Click to refresh the data from the backend"):
+if st.button("🔄 Update Assessment Data", key="update", help="Click to refresh the data from the backend", use_container_width=True):
     with st.spinner("Updating data..."):
         try:
             response = requests.post(f"{FASTAPI_URL}/update-data")
             if response.status_code == 200:
-                st.success("✅ Data updated successfully!")
+                st.success("✅ Data updated successfully!", icon="✅")
             else:
-                st.error(f"❌ Failed to update: {response.status_code}")
+                st.error(f"❌ Failed to update: {response.status_code}", icon="⚠️")
         except Exception as e:
-            st.error(f"❌ Error: {str(e)}")
+            st.error(f"❌ Error: {str(e)}", icon="⚠️")
 
-query = st.text_input("Enter job role or keywords:")
+query = st.text_input("Enter job role or keywords:", help="Enter job role or keywords to search for relevant assessments")
 
-if st.button("Search", key="search", help="Search assessments based on your query"):
+if st.button("Search", key="search", help="Search assessments based on your query", use_container_width=True):
     with st.spinner("Fetching recommendations..."):
         response = requests.post(f"{FASTAPI_URL}/recommend", json={"query": query})
 
@@ -110,6 +133,6 @@ if st.button("Search", key="search", help="Search assessments based on your quer
                             </div>
                         """, unsafe_allow_html=True)
             else:
-                st.warning("No results found.")
+                st.warning("No results found.", icon="⚠️")
         else:
-            st.error("Something went wrong fetching data.")
+            st.error("Something went wrong fetching data.", icon="⚠️")
