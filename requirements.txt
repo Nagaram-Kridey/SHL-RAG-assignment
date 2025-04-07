@@ -5,3 +5,8 @@ beautifulsoup4
 faiss-cpu
 cohere
 webdriver-manager
+pydantic
+fastapi
+os
+subprocess
+pathlib
