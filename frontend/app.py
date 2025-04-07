@@ -16,7 +16,6 @@ if st.button("🔄 Update Assessment Data"):
         except Exception as e:
             st.error(f"❌ Error: {str(e)}")
 
-
 query = st.text_input("Enter job role or keywords:")
 
 if st.button("Search") and query:
@@ -24,13 +23,18 @@ if st.button("Search") and query:
         response = requests.post(f"{FASTAPI_URL}/recommend", json={"query": query})
 
         if response.status_code == 200:
-            results = response.json()
-            st.success("Results loaded!")
-            st.json(results)
-
-            for result in results:
-                st.write(f"**{result.get('name', 'Untitled')}**")
-                st.write(result.get("description", "No description available."))
-                st.markdown("---")
+            results = response.json().get("results", [])
+            if results:
+                st.success("Results loaded!")
+                for result in results:
+                    st.write(f"**{result.get('name', 'Untitled')}**")
+                    st.write(result.get("description", "No description available."))
+                    st.write(f"Duration: {result.get('duration')} minutes")
+                    st.write(f"Remote Support: {result.get('remote_support')}")
+                    st.write(f"Adaptive: {result.get('adaptive')}")
+                    st.markdown(f"[More Info]({result.get('url')})")
+                    st.markdown("---")
+            else:
+                st.warning("No results found.")
         else:
             st.error("Something went wrong fetching data.")
