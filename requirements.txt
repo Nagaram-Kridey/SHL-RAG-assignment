@@ -7,6 +7,4 @@ cohere
 webdriver-manager
 pydantic
 fastapi
-os
-subprocess
 pathlib
