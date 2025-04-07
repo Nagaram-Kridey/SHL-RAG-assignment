@@ -32,7 +32,7 @@ def recommend(req: QueryRequest):
 @app.post("/update-data")
 def update_data():
     try:
-        scrape_catalog()  # Call the function to scrape the data
+        load_data_and_update_index()  # Call the function to scrape the data
         return {"message": "Data updated successfully!"}
     except Exception as e:
         return {"error": str(e)}
