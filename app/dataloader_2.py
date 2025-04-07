@@ -18,13 +18,19 @@ CATALOG_URL = "https://www.shl.com/solutions/products/product-catalog/"
 DATA_PATH = "data/shl_assessments.json"
 VEC_PATH = "data/vectors.index"
 
+assessments = []
+vectors = []
+
+
 def load_existing_data():
     if os.path.exists(DATA_PATH):
         with open(DATA_PATH, "r", encoding="utf-8") as f:
             return json.load(f)
     return []
 
-def scrape_catalog():
+
+def load_data_and_update_index():
+    global assessments, vectors
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
@@ -94,7 +100,7 @@ def scrape_catalog():
                 if new_items % 5 == 0:
                     with open(DATA_PATH, "w", encoding="utf-8") as f:
                         json.dump(assessments, f, indent=2, ensure_ascii=False)
-                    print("💾 Saved progress after 5 items")
+                    print("📏 Saved progress after 5 items")
 
             except Exception as e:
                 print(f"❌ Error on item: {e}")
@@ -105,7 +111,6 @@ def scrape_catalog():
                 EC.element_to_be_clickable((By.CLASS_NAME, "pagination__arrow"))
             )
 
-            # Hide overlay that blocks clicks
             driver.execute_script("""
                 const el = document.querySelector('.locale-switcher');
                 if (el) el.style.display = 'none';
@@ -114,7 +119,6 @@ def scrape_catalog():
             time.sleep(1)
             driver.execute_script("arguments[0].click();", next_button)
 
-            # Wait for content to change
             WebDriverWait(driver, 10).until(
                 lambda d: old_first_name != BeautifulSoup(d.page_source, 'html.parser')
                 .find("td", class_="custom__table-heading__title").text.strip()
@@ -128,7 +132,6 @@ def scrape_catalog():
 
     driver.quit()
 
-    # Save all at the end
     with open(DATA_PATH, "w", encoding="utf-8") as f:
         json.dump(assessments, f, indent=2, ensure_ascii=False)
 
@@ -139,6 +142,3 @@ def scrape_catalog():
         faiss.write_index(index, VEC_PATH)
 
     print(f"✅ Finished scraping {len(assessments)} assessments!")
-
-if __name__ == "__main__":
-    scrape_catalog()
