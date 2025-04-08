@@ -24,7 +24,7 @@ def get_all_assessments():
         return {"results": data}
     return {"results": []}
 
-@app.get("/recommend")
+@app.post("/recommend")
 def recommend(req: QueryRequest):
     return {"results": recommend_query(req.query)}
 
@@ -38,7 +38,7 @@ def update_data():
     except Exception as e:
         return {"error": str(e)}
 
-@app.post("/health")
+@app.get("/health")
 def healthcheck():
     return {"status": "healthy"}
 
