@@ -24,7 +24,7 @@ def get_all_assessments():
         return {"results": data}
     return {"results": []}
 
-@app.post("/recommend")
+@app.get("/recommend")
 def recommend(req: QueryRequest):
     return {"results": recommend_query(req.query)}
 
