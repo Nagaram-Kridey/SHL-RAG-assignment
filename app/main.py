@@ -28,6 +28,7 @@ def get_all_assessments():
 def recommend(req: QueryRequest):
     return {"results": recommend_query(req.query)}
 
+
 # New endpoint to trigger data scraping
 @app.post("/update-data")
 def update_data():
@@ -36,3 +37,8 @@ def update_data():
         return {"message": "Data updated successfully!"}
     except Exception as e:
         return {"error": str(e)}
+
+@app.post("/health")
+def healthcheck():
+    return {"status": "healthy"}
+
